@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  phone         String?
+  role          Role      @default(CLIENT)
+  accounts      Account[]
+  sessions      Session[]
+  fields        Field[]
+  bookings      Booking[]
+  reviews       Review[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Field {
+  id           Int            @id @default(autoincrement())
+  owner        User           @relation(fields: [ownerId], references: [id])
+  ownerId      String
+  name         String
+  description  String
+  address      String
+  city         String
+  country      String
+  latitude     Float?
+  longitude    Float?
+  pricePerHour Float
+  fieldType    FieldType
+  photos       FieldPhoto[]
+  availability Availability[]
+  bookings     Booking[]
+  reviews      Review[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model FieldPhoto {
+  id      Int     @id @default(autoincrement())
+  field   Field   @relation(fields: [fieldId], references: [id])
+  fieldId Int
+  url     String
+  isCover Boolean @default(false)
+}
+
+model Availability {
+  id        Int      @id @default(autoincrement())
+  field     Field    @relation(fields: [fieldId], references: [id])
+  fieldId   Int
+  date      DateTime
+  startTime DateTime
+  endTime   DateTime
+  isBooked  Boolean  @default(false)
+}
+
+model Booking {
+  id         Int           @id @default(autoincrement())
+  field      Field         @relation(fields: [fieldId], references: [id])
+  fieldId    Int
+  user       User          @relation(fields: [userId], references: [id])
+  userId     String
+  startTime  DateTime
+  endTime    DateTime
+  totalPrice Float
+  status     BookingStatus @default(PENDING)
+  payment    Payment?
+  review     Review?
+  createdAt  DateTime      @default(now())
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  booking       Booking       @relation(fields: [bookingId], references: [id])
+  bookingId     Int           @unique
+  amount        Float
+  paymentMethod String
+  status        PaymentStatus @default(PENDING)
+  transactionId String?
+  createdAt     DateTime      @default(now())
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  bookingId Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  field     Field    @relation(fields: [fieldId], references: [id])
+  fieldId   Int
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+// Enums
+enum Role {
+  CLIENT
+  HOST
+  ADMIN
+}
+
+enum FieldType {
+  FIVE_A_SIDE // 5 vs 5
+  SEVEN_A_SIDE // 7 vs 7
+  ELEVEN_A_SIDE // 11 vs 11
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
