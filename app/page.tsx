@@ -63,7 +63,6 @@ export default async function Home() {
               price={cancha.pricePerHour}
               type={'Exterior'}
               capacity={'5vs5'}
-
             />
           ))}
         </div>

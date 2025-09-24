@@ -85,7 +85,7 @@ FieldCardProps) => {
           <Button
             // onClick={() => onViewDetails(id)}
             variant="default"
-            className="bg-primary hover:bg-primary-hover shadow-soft"
+            className="bg-blue-600 hover:bg-blue-900 text-white shadow-blue-soft"
           >
             Ver Detalles
           </Button>
