@@ -10,9 +10,9 @@ import { SearchIcon } from 'lucide-react'
 
 const SearchBar = () => {
   return (
-    <div className="p-4 bg-gray-50 shadow-sm">
+    <div className="p-4 bg-gray-50 shadow-sm flex justify-center">
       <Dialog>
-        <DialogTrigger className="flex place-self-center items-center gap-2 w-fit py-2 px-10 shadow-md border border-gray-200 bg-white rounded-full focus:border-gray-400 focus:border-2">
+        <DialogTrigger className="flex items-center gap-2 w-fit py-2 px-10 shadow-md border border-gray-200 bg-white rounded-full focus:border-gray-400 focus:border-2">
           <SearchIcon className="size-4" /> <span className="text-sm font-medium">Comienza a buscar</span>
         </DialogTrigger>
         <DialogContent>
