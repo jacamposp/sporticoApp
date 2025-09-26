@@ -1,4 +1,6 @@
 import Navbar from '@/components/NavBar'
+import SearchBar from '@/components/SearchBar'
+import BottomNavBar from '@/components/BottomNavBar'
 import { FieldCard } from '@/components/FieldCard'
 import { Separator } from '@/components/ui/separator'
 // import { removeAccents } from '@/lib/utils'
@@ -16,8 +18,6 @@ export default async function Home() {
       createdAt: 'desc',
     },
   })
-
-  console.log(canchas)
 
   // const [filters, setFilters] = useState<Filters>({
   //   date: undefined,
@@ -43,9 +43,9 @@ export default async function Home() {
 
   return (
     <>
-      <Navbar />
+      <SearchBar />
       <Separator orientation="horizontal" className="bg-border" />
-      <main className="flex flex-col gap-4 p-4">
+      <main className="flex flex-col gap-4 pt-4 pb-24">
         <h1 className="text-2xl font-bold text-center">Reserva tu cancha</h1>
         <p className="text-sm text-center">Descubre campos de fútbol premium disponibles para reservar en tu zona</p>
 
@@ -66,6 +66,7 @@ export default async function Home() {
             />
           ))}
         </div>
+        <BottomNavBar />
       </main>
     </>
   )

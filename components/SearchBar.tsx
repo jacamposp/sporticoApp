@@ -28,7 +28,7 @@ const vsMode = [
   { value: '4 vs 4', label: '4 vs 4' },
 ]
 
-const Navbar = () => {
+const SearchBar = () => {
   const { data: session } = useSession()
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [time, setTime] = useState<string>('')
@@ -69,4 +69,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default SearchBar

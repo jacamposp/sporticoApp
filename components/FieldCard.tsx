@@ -35,7 +35,7 @@ FieldCardProps) => {
   return (
     <Card
       key={id}
-      className="group overflow-hidden min-w-[350px] max-w-[450px] border-none shadow-card hover:shadow-hover hover:rounded-lg transition-all duration-300 transform hover:-translate-y-1 bg-card-gradient"
+      className="group overflow-hidden min-w-[350px] max-w-[450px] border-none pt-0 shadow-card hover:shadow-hover hover:rounded-lg transition-all duration-300 transform hover:-translate-y-1 bg-white"
     >
       <div className="rounded-t-lg relative overflow-hidden group-hover:rounded-t-lg transition-all duration-500">
         <img
