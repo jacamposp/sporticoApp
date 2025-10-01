@@ -2,8 +2,6 @@ import SearchBar from '@/components/SearchBar'
 import BottomNavBar from '@/components/BottomNavBar'
 import { FieldCard } from '@/components/FieldCard'
 import { Separator } from '@/components/ui/separator'
-// import { removeAccents } from '@/lib/utils'
-// import { Filters } from '@/lib/types'
 
 import { prisma } from '@/lib/prisma'
 
@@ -18,33 +16,11 @@ export default async function Home() {
     },
   })
 
-  // const [filters, setFilters] = useState<Filters>({
-  //   date: undefined,
-  //   time: '',
-  //   players: '',
-  //   location: '',
-  // })
-  // const [filteredCanchas, setFilteredCanchas] = useState(canchas)
-
-  // useEffect(() => {
-  //   setFilteredCanchas(
-  //     canchas.filter(
-  //       (cancha) =>
-  //         removeAccents(cancha.location.toLowerCase()).includes(
-  //           removeAccents((filters.location || '').toLowerCase())
-  //         ) &&
-  //         cancha.capacity.includes(filters.players || '') &&
-  //         cancha.availability.includes(filters.time || '')
-  //       // cancha.date.includes(filters.date) //TODO: add date filter
-  //     )
-  //   )
-  // }, [filters])
-
   return (
     <>
       <SearchBar />
       <Separator orientation="horizontal" className="border border-gray-200" />
-      <main className="flex flex-col gap-4 pt-4 pb-24">
+      <main className="flex flex-col gap-4 pt-4 pb-24 px-8">
         <h1 className="text-2xl font-bold text-center">Reserva tu cancha</h1>
         <p className="text-sm text-center">Descubre campos de fútbol premium disponibles para reservar en tu zona</p>
 
