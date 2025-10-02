@@ -2,11 +2,49 @@ import SearchBar from '@/components/SearchBar'
 import BottomNavBar from '@/components/BottomNavBar'
 import { FieldCard } from '@/components/FieldCard'
 import { Separator } from '@/components/ui/separator'
-
 import { prisma } from '@/lib/prisma'
+import { FieldType } from '@/lib/types'
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const whereConditions: any = {}
+
+  if (searchParams.location) {
+    whereConditions.OR = [
+      { city: { contains: searchParams.location, mode: 'insensitive' } },
+      { address: { contains: searchParams.location, mode: 'insensitive' } },
+      { name: { contains: searchParams.location, mode: 'insensitive' } },
+    ]
+  }
+
+  if (searchParams.date) {
+    const searchDate = new Date(searchParams.date as string)
+
+    whereConditions.availability = {
+      some: {
+        date: {
+          gte: searchDate,
+          lt: new Date(searchDate.getTime() + 24 * 60 * 60 * 1000), // Next day
+        },
+        isBooked: false,
+        ...(searchParams.time && {
+          startTime: {
+            lte: new Date(`${searchParams.date}T${searchParams.time}`),
+          },
+        }),
+      },
+    }
+  }
+
+  if (searchParams.mode) {
+    whereConditions.fieldType = searchParams.mode as FieldType
+  }
+
   const canchas = await prisma.field.findMany({
+    where: whereConditions,
     include: {
       photos: true,
       availability: true,
