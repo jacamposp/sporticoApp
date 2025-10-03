@@ -1,5 +1,4 @@
 import SearchBar from '@/components/SearchBar'
-import BottomNavBar from '@/components/BottomNavBar'
 import { FieldCard } from '@/components/FieldCard'
 import { Separator } from '@/components/ui/separator'
 import { prisma } from '@/lib/prisma'
@@ -8,20 +7,22 @@ import { FieldType } from '@/lib/types'
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+  const params = await searchParams
+
   const whereConditions: any = {}
 
-  if (searchParams.location) {
+  if (params.location) {
     whereConditions.OR = [
-      { city: { contains: searchParams.location, mode: 'insensitive' } },
-      { address: { contains: searchParams.location, mode: 'insensitive' } },
-      { name: { contains: searchParams.location, mode: 'insensitive' } },
+      { city: { contains: params.location, mode: 'insensitive' } },
+      { address: { contains: params.location, mode: 'insensitive' } },
+      { name: { contains: params.location, mode: 'insensitive' } },
     ]
   }
 
-  if (searchParams.date) {
-    const searchDate = new Date(searchParams.date as string)
+  if (params.date) {
+    const searchDate = new Date(params.date as string)
 
     whereConditions.availability = {
       some: {
@@ -30,17 +31,17 @@ export default async function Home({
           lt: new Date(searchDate.getTime() + 24 * 60 * 60 * 1000), // Next day
         },
         isBooked: false,
-        ...(searchParams.time && {
+        ...(params.time && {
           startTime: {
-            lte: new Date(`${searchParams.date}T${searchParams.time}`),
+            lte: new Date(`${params.date}T${params.time}`),
           },
         }),
       },
     }
   }
 
-  if (searchParams.mode) {
-    whereConditions.fieldType = searchParams.mode as FieldType
+  if (params.mode) {
+    whereConditions.fieldType = params.mode as FieldType
   }
 
   const canchas = await prisma.field.findMany({
@@ -62,7 +63,6 @@ export default async function Home({
         <h1 className="text-2xl font-bold text-center">Reserva tu cancha</h1>
         <p className="text-sm text-center">Descubre campos de fútbol premium disponibles para reservar en tu zona</p>
 
-        {/* CARD */}
         <div className="flex flex-wrap gap-4 justify-center items-center">
           {canchas.map((cancha) => (
             <FieldCard
@@ -79,7 +79,6 @@ export default async function Home({
             />
           ))}
         </div>
-        <BottomNavBar />
       </main>
     </>
   )
