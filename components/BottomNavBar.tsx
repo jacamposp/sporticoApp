@@ -2,6 +2,7 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Search, User, Heart } from 'lucide-react'
 
 const BottomNavBar = () => {
@@ -34,7 +35,13 @@ const BottomNavBar = () => {
             isLoggedIn ? router.push('/profile') : router.push('/login')
           }}
         >
-          <User className="size-5" strokeWidth={2} /> {isLoggedIn ? 'Perfil' : 'Iniciar sesión'}
+          <Avatar className="size-5">
+            <AvatarImage src={session?.user?.image ?? ''} />
+            <AvatarFallback className="bg-transparent">
+              <User className="size-5" strokeWidth={2} />
+            </AvatarFallback>
+          </Avatar>
+          {isLoggedIn ? 'Perfil' : 'Iniciar sesión'}
         </TabsTrigger>
       </TabsList>
     </Tabs>
