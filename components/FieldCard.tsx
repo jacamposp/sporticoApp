@@ -1,7 +1,9 @@
+'use client'
+
 import { Star, MapPin, Clock, Users } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 export type FieldType = 'Exterior' | 'Interior'
 
@@ -32,10 +34,17 @@ export const FieldCard = ({
   availability,
 }: //   onViewDetails,
 FieldCardProps) => {
+  const router = useRouter()
+
+  const handleGoToFieldDetails = () => {
+    router.push(`/fields/${id}`)
+  }
+
   return (
     <Card
       key={id}
       className="group overflow-hidden min-w-[350px] max-w-[450px] border-none pt-0 shadow-card hover:shadow-hover hover:rounded-lg transition-all duration-300 transform hover:-translate-y-1 bg-white"
+      onClick={handleGoToFieldDetails}
     >
       <div className="rounded-t-lg relative overflow-hidden group-hover:rounded-t-lg transition-all duration-500">
         <img
@@ -82,13 +91,6 @@ FieldCardProps) => {
             <span className="text-2xl font-bold">₡{price}</span>
             <span className="text-muted-foreground">/hora</span>
           </div>
-          <Button
-            // onClick={() => onViewDetails(id)}
-            variant="default"
-            className="bg-blue-600 hover:bg-blue-900 text-white shadow-blue-soft"
-          >
-            Ver Detalles
-          </Button>
         </div>
       </CardContent>
     </Card>
