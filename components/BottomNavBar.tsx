@@ -1,14 +1,20 @@
 'use client'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { Search, User, Heart } from 'lucide-react'
 
 const BottomNavBar = () => {
   const { data: session } = useSession()
   const router = useRouter()
+  const pathname = usePathname()
   const isLoggedIn = !!session
+
+  if (pathname.includes('/fields/')) {
+    return
+  }
 
   return (
     <Tabs defaultValue="home" className="fixed bottom-0 left-0 right-0 bg-white rounded-t-none max-h-24 min-h-18">
