@@ -121,44 +121,58 @@ const FieldAvailability = () => {
   )
 }
 
-const FieldMap = () => {
-  return (
-    <>
-      <div>
-        <h1>Mapa de la cancha de fútbol</h1>
-      </div>
-      <Separator orientation="horizontal" className="bg-gray-200" />
-    </>
-  )
-}
+// const FieldMap = () => {
+//   return (
+//     <>
+//       <div>
+//         <h1>Mapa de la cancha de fútbol</h1>
+//       </div>
+//       <Separator orientation="horizontal" className="bg-gray-200" />
+//     </>
+//   )
+// }
 
-const FieldReviews = () => {
+// const FieldReviews = () => {
+//   return (
+//     <>
+//       <div>
+//         <h1>Reseñas de la cancha de fútbol</h1>
+//       </div>
+//       <Separator orientation="horizontal" className="bg-gray-200" />
+//     </>
+//   )
+// }
+
+const FieldBooking = () => {
   return (
-    <>
-      <div>
-        <h1>Reseñas de la cancha de fútbol</h1>
+    <div className="flex justify-between items-center bottom-0 bg-white w-full p-4 sticky border-t border-gray-200">
+      <div className="flex flex-col items-start gap-2">
+        <span className="text-sm text-gray-500 text-left">Total</span>
+        <span className="text-sm font-bold text-gray-900">25.000 ₡</span>
       </div>
-      <Separator orientation="horizontal" className="bg-gray-200" />
-    </>
+      <Button variant="outline" className="bg-primary text-white rounded-full">
+        Reservar cancha
+      </Button>
+    </div>
   )
 }
 
 const FieldsPage = () => {
   return (
-    <div>
-      <Header />
-
-      <main className="flex flex-col gap-4 pt-4 pb-24">
+    <>
+      <main className="flex flex-col gap-4">
+        <Header />
         <div className="flex flex-col gap-4 w-full -top-16 relative bg-white rounded-4xl p-4">
           <FieldBasicInfo />
           <FieldDescription />
           <FieldAmenities />
           <FieldAvailability />
-          <FieldMap />
-          <FieldReviews />
+          <FieldBooking />
+          {/* <FieldMap /> */}
+          {/* <FieldReviews /> */}
         </div>
       </main>
-    </div>
+    </>
   )
 }
 
