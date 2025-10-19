@@ -5,4 +5,4 @@ export type Filters = {
   mode: string
 }
 
-export type FieldType = '5v5' | '7v7' | '8v8' | '9v9' | '11v11'
+export type FieldType = '5vs5' | '7vs7' | '8vs8' | '11vs11'

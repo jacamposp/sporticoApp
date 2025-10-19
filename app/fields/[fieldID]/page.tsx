@@ -1,49 +1,36 @@
-'use client'
 //React core
 
 //Third party / external libraries
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+
+import { HeaderButtons, Booking } from './_components'
+ 
 import { Separator } from '@/components/ui/separator'
 import Calendar from '@/components/Calendar'
+import { prisma } from '@/lib/prisma'
+import { FieldType } from '@/lib/types'
 
 //types
 
 //Icons
-import { ArrowLeftIcon, Star, Users, Share, CarFront, ShowerHead, Wifi } from 'lucide-react'
+import { Star, Users, CarFront, ShowerHead, Wifi } from 'lucide-react'
 
 const Header = () => {
-  const router = useRouter()
-
-  const handleGoBack = () => {
-    router.back()
-  }
-
   return (
     <div>
-      <Button
-        variant="outline"
-        className="absolute top-4 left-4 h-10 w-10 opacity-75 rounded-full"
-        onClick={handleGoBack}
-      >
-        <ArrowLeftIcon strokeWidth={2.5} />
-      </Button>
-      <Button variant="outline" className="absolute top-4 right-4 h-10 w-10 opacity-75 rounded-full">
-        <Share strokeWidth={2.5} />
-      </Button>
+      <HeaderButtons />
       <Image src="/field-1.jpg" alt="Field" width={1000} height={1000} />
     </div>
   )
 }
 
-const FieldBasicInfo = () => {
+const FieldBasicInfo = ({ name, address, fieldType }: { name: string; address: string; fieldType: FieldType }) => {
   return (
     <>
       <div className="flex items-center justify-center gap-4">
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-xl font-bold text-center">Cancha de fútbol</h1>
-          <span className="text-sm text-gray-500">San Roque, Grecia, Alajuela</span>
+          <h1 className="text-xl font-bold text-center">{name}</h1>
+          <span className="text-sm text-gray-500">{address}</span>
         </div>
       </div>
       <div className="flex items-center justify-center gap-4">
@@ -54,7 +41,7 @@ const FieldBasicInfo = () => {
         <Separator orientation="vertical" decorative className="bg-gray-400" style={{ height: '20px', width: '1px' }} />
         <div className="flex items-center gap-2">
           <Users strokeWidth={2} />
-          <span className="text-sm font-medium">5vs5</span>
+          <span className="text-sm font-medium">{fieldType}</span>
         </div>
       </div>
       <Separator orientation="horizontal" className="bg-gray-200" />
@@ -62,14 +49,12 @@ const FieldBasicInfo = () => {
   )
 }
 
-const FieldDescription = () => {
+const FieldDescription = ({ description }: { description: string }) => {
   return (
     <>
       <div>
         <h2 className="text-lg font-bold mb-2">Sobre la cancha</h2>
-        <p className="text-sm text-gray-500">
-          Esta cancha de fútbol es una cancha de fútbol de 5vs5, con un campo de 100x60 metros.
-        </p>
+        <p className="text-sm text-gray-500">{description}</p>
       </div>
     </>
   )
@@ -143,31 +128,43 @@ const FieldAvailability = () => {
 //   )
 // }
 
-const FieldBooking = () => {
-  return (
-    <div className="flex justify-between items-center bottom-0 bg-white w-full p-4 sticky border-t border-gray-200">
-      <div className="flex flex-col items-start gap-2">
-        <span className="text-sm text-gray-500 text-left">Total</span>
-        <span className="text-sm font-bold text-gray-900">25.000 ₡</span>
-      </div>
-      <Button variant="outline" className="bg-primary text-white rounded-full">
-        Reservar cancha
-      </Button>
-    </div>
-  )
-}
+// const FieldBooking = () => {
+//   return (
+//     <div className="flex justify-between items-center bottom-0 bg-white w-full p-4 sticky border-t border-gray-200">
+//       <div className="flex flex-col items-start gap-2">
+//         <span className="text-sm text-gray-500 text-left">Total</span>
+//         <span className="text-lg font-bold text-gray-900">{10000} ₡</span>
+//       </div>
+//       <Button variant="outline" className="bg-primary text-white rounded-full">
+//         Reservar cancha
+//       </Button>
+//     </div>
+//   )
+// }
 
-const FieldsPage = () => {
+const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
+  const field = await prisma.field.findUnique({
+    where: {
+      id: parseInt(params.fieldID),
+    },
+  })
+
+  if (!field) {
+    return <div>Cancha no encontrada</div>
+  }
+
+  const { id, name, description, address, city, country, pricePerHour, fieldType } = field
+
   return (
     <>
       <main className="flex flex-col gap-4">
         <Header />
         <div className="flex flex-col gap-4 w-full -top-16 relative bg-white rounded-4xl p-4">
-          <FieldBasicInfo />
-          <FieldDescription />
+          <FieldBasicInfo name={name} address={address} fieldType={fieldType as FieldType} />
+          <FieldDescription description={description} />
           <FieldAmenities />
           <FieldAvailability />
-          <FieldBooking />
+          <Booking pricePerHour={pricePerHour}/>
           {/* <FieldMap /> */}
           {/* <FieldReviews /> */}
         </div>

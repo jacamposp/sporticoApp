@@ -2,9 +2,6 @@
 CREATE TYPE "public"."Role" AS ENUM ('CLIENT', 'HOST', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "public"."FieldType" AS ENUM ('FIVE_A_SIDE', 'SEVEN_A_SIDE', 'ELEVEN_A_SIDE');
-
--- CreateEnum
 CREATE TYPE "public"."BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED');
 
 -- CreateEnum
@@ -72,7 +69,7 @@ CREATE TABLE "public"."Field" (
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
     "pricePerHour" DOUBLE PRECISION NOT NULL,
-    "fieldType" "public"."FieldType" NOT NULL,
+    "fieldType" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

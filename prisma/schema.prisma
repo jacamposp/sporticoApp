@@ -77,7 +77,7 @@ model Field {
   latitude     Float?
   longitude    Float?
   pricePerHour Float
-  fieldType    FieldType
+  fieldType    String
   photos       FieldPhoto[]
   availability Availability[]
   bookings     Booking[]
@@ -148,12 +148,6 @@ enum Role {
   CLIENT
   HOST
   ADMIN
-}
-
-enum FieldType {
-  FIVE_A_SIDE // 5 vs 5
-  SEVEN_A_SIDE // 7 vs 7
-  ELEVEN_A_SIDE // 11 vs 11
 }
 
 enum BookingStatus {

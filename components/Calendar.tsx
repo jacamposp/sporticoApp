@@ -1,21 +1,16 @@
-'use client';
-
-import { useState } from 'react';
-import WeeklyCalendar from './WeeklyCalendar';
-import TimeAvailability from './TimeAvailability';
+import WeeklyCalendar from './WeeklyCalendar'
+import TimeAvailability from './TimeAvailability'
 
 const Calendar = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-
   return (
     <div className="p-4">
       {/* Calendario */}
-      <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+      <WeeklyCalendar />
 
       {/* Disponibilidad de horas */}
-      <TimeAvailability selectedDate={selectedDate} />
+      <TimeAvailability />
     </div>
-  );
-};
+  )
+}
 
-export default Calendar;
+export default Calendar
