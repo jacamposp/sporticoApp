@@ -106,42 +106,6 @@ const FieldAvailability = () => {
   )
 }
 
-// const FieldMap = () => {
-//   return (
-//     <>
-//       <div>
-//         <h1>Mapa de la cancha de fútbol</h1>
-//       </div>
-//       <Separator orientation="horizontal" className="bg-gray-200" />
-//     </>
-//   )
-// }
-
-// const FieldReviews = () => {
-//   return (
-//     <>
-//       <div>
-//         <h1>Reseñas de la cancha de fútbol</h1>
-//       </div>
-//       <Separator orientation="horizontal" className="bg-gray-200" />
-//     </>
-//   )
-// }
-
-// const FieldBooking = () => {
-//   return (
-//     <div className="flex justify-between items-center bottom-0 bg-white w-full p-4 sticky border-t border-gray-200">
-//       <div className="flex flex-col items-start gap-2">
-//         <span className="text-sm text-gray-500 text-left">Total</span>
-//         <span className="text-lg font-bold text-gray-900">{10000} ₡</span>
-//       </div>
-//       <Button variant="outline" className="bg-primary text-white rounded-full">
-//         Reservar cancha
-//       </Button>
-//     </div>
-//   )
-// }
-
 const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
   const field = await prisma.field.findUnique({
     where: {
