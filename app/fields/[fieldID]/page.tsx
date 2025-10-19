@@ -4,7 +4,7 @@
 import Image from 'next/image'
 
 import { HeaderButtons, Booking } from './_components'
- 
+
 import { Separator } from '@/components/ui/separator'
 import Calendar from '@/components/Calendar'
 import { prisma } from '@/lib/prisma'
@@ -153,7 +153,7 @@ const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
     return <div>Cancha no encontrada</div>
   }
 
-  const { id, name, description, address, city, country, pricePerHour, fieldType } = field
+  const { name, description, address, pricePerHour, fieldType } = field
 
   return (
     <>
@@ -164,7 +164,7 @@ const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
           <FieldDescription description={description} />
           <FieldAmenities />
           <FieldAvailability />
-          <Booking pricePerHour={pricePerHour}/>
+          <Booking pricePerHour={pricePerHour} />
           {/* <FieldMap /> */}
           {/* <FieldReviews /> */}
         </div>
