@@ -1,4 +1,4 @@
-import { PrismaClient, Role, BookingStatus, PaymentStatus } from '@prisma/client'
+import { PrismaClient, Role, BookingStatus, PaymentStatus, FieldType } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -50,7 +50,7 @@ async function main() {
         latitude: 10.0735,
         longitude: -84.3117,
         pricePerHour: 22000,
-        fieldType: '5vs5',
+        fieldType: FieldType.FIVE_VS_FIVE,
         photos: {
           create: [{ url: 'https://example.com/field1.jpg', isCover: true }, { url: 'https://example.com/field2.jpg' }],
         },
@@ -138,7 +138,7 @@ async function main() {
     latitude: 9.9281,
     longitude: -84.0907,
     pricePerHour: 35000,
-    fieldType: '7vs7',
+    fieldType: FieldType.SEVEN_VS_SEVEN,
     photos: {
       create: [{ url: 'https://example.com/field3.jpg', isCover: true }],
     },
@@ -161,7 +161,7 @@ async function main() {
     latitude: 9.8644,
     longitude: -83.9194,
     pricePerHour: 50000,
-    fieldType: '11vs11',
+    fieldType: FieldType.ELEVEN_VS_ELEVEN,
     photos: {
       create: [{ url: 'https://example.com/field4.jpg', isCover: true }],
     },
@@ -184,7 +184,7 @@ async function main() {
     latitude: 10.0379,
     longitude: -84.1169,
     pricePerHour: 18000,
-    fieldType: '5vs5',
+    fieldType: FieldType.FIVE_VS_FIVE,
     photos: {
       create: [{ url: 'https://example.com/field5.jpg', isCover: true }],
     },

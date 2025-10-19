@@ -8,7 +8,7 @@ import { HeaderButtons, Booking } from './_components'
 import { Separator } from '@/components/ui/separator'
 import Calendar from '@/components/Calendar'
 import { prisma } from '@/lib/prisma'
-import { FieldType } from '@/lib/types'
+import { FieldType, fieldTypeDisplay } from '@/lib/types'
 
 //types
 
@@ -41,7 +41,7 @@ const FieldBasicInfo = ({ name, address, fieldType }: { name: string; address: s
         <Separator orientation="vertical" decorative className="bg-gray-400" style={{ height: '20px', width: '1px' }} />
         <div className="flex items-center gap-2">
           <Users strokeWidth={2} />
-          <span className="text-sm font-medium">{fieldType}</span>
+          <span className="text-sm font-medium">{fieldTypeDisplay[fieldType]}</span>
         </div>
       </div>
       <Separator orientation="horizontal" className="bg-gray-200" />

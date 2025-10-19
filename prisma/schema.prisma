@@ -77,7 +77,7 @@ model Field {
   latitude     Float?
   longitude    Float?
   pricePerHour Float
-  fieldType    String
+  fieldType    FieldType
   photos       FieldPhoto[]
   availability Availability[]
   bookings     Booking[]
@@ -162,4 +162,10 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+enum FieldType {
+  FIVE_VS_FIVE
+  SEVEN_VS_SEVEN
+  ELEVEN_VS_ELEVEN
 }
