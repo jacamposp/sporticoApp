@@ -12,10 +12,8 @@ const nextConfig: NextConfig = {
     }
     return config
   },
-  // Excluir el directorio prisma de la compilación
-  experimental: {
-    serverComponentsExternalPackages: ['prisma'],
-  },
+  // Excluir el directorio prisma de la compilación (Next.js 15+)
+  serverExternalPackages: ['prisma'],
 }
 
 export default nextConfig
