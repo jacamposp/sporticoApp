@@ -7,6 +7,9 @@ CREATE TYPE "public"."BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED
 -- CreateEnum
 CREATE TYPE "public"."PaymentStatus" AS ENUM ('PENDING', 'PAID', 'FAILED', 'REFUNDED');
 
+-- CreateEnum
+CREATE TYPE "public"."FieldType" AS ENUM ('FIVE_VS_FIVE', 'SEVEN_VS_SEVEN', 'ELEVEN_VS_ELEVEN');
+
 -- CreateTable
 CREATE TABLE "public"."User" (
     "id" TEXT NOT NULL,
@@ -69,7 +72,7 @@ CREATE TABLE "public"."Field" (
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
     "pricePerHour" DOUBLE PRECISION NOT NULL,
-    "fieldType" TEXT NOT NULL,
+    "fieldType" "public"."FieldType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
