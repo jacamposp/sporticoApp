@@ -1,12 +1,51 @@
 import SearchBar from '@/components/SearchBar'
-import BottomNavBar from '@/components/BottomNavBar'
 import { FieldCard } from '@/components/FieldCard'
 import { Separator } from '@/components/ui/separator'
-
 import { prisma } from '@/lib/prisma'
+import { FieldType } from '@/lib/types'
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const params = await searchParams
+
+  const whereConditions: any = {}
+
+  if (params.location) {
+    whereConditions.OR = [
+      { city: { contains: params.location, mode: 'insensitive' } },
+      { address: { contains: params.location, mode: 'insensitive' } },
+      { name: { contains: params.location, mode: 'insensitive' } },
+    ]
+  }
+
+  if (params.date) {
+    const searchDate = new Date(params.date as string)
+
+    whereConditions.availability = {
+      some: {
+        date: {
+          gte: searchDate,
+          lt: new Date(searchDate.getTime() + 24 * 60 * 60 * 1000), // Next day
+        },
+        isBooked: false,
+        ...(params.time && {
+          startTime: {
+            lte: new Date(`${params.date}T${params.time}`),
+          },
+        }),
+      },
+    }
+  }
+
+  if (params.mode) {
+    whereConditions.fieldType = params.mode as FieldType
+  }
+
   const canchas = await prisma.field.findMany({
+    where: whereConditions,
     include: {
       photos: true,
       availability: true,
@@ -24,7 +63,6 @@ export default async function Home() {
         <h1 className="text-2xl font-bold text-center">Reserva tu cancha</h1>
         <p className="text-sm text-center">Descubre campos de fútbol premium disponibles para reservar en tu zona</p>
 
-        {/* CARD */}
         <div className="flex flex-wrap gap-4 justify-center items-center">
           {canchas.map((cancha) => (
             <FieldCard
@@ -41,7 +79,6 @@ export default async function Home() {
             />
           ))}
         </div>
-        <BottomNavBar />
       </main>
     </>
   )

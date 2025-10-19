@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Providers } from '@/components/Providers'
 import { Montserrat } from 'next/font/google'
+import BottomNavBar from '@/components/BottomNavBar'
 import './globals.css'
 
 const montserrat = Montserrat({
@@ -21,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.className} antialiased bg-gray-100`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <BottomNavBar />
+        </Providers>
       </body>
     </html>
   )
