@@ -1,99 +1,11 @@
 //React core
 
 //Third party / external libraries
-import Image from 'next/image'
+import { Booking, Header, Description, Amenities, MainInfo } from './_components'
 
-import { HeaderButtons, Booking } from './_components'
-
-import { Separator } from '@/components/ui/separator'
 import Calendar from '@/components/Calendar'
 import { prisma } from '@/lib/prisma'
 import { FieldType, fieldTypeDisplay } from '@/lib/types'
-
-//types
-
-//Icons
-import { Star, Users, CarFront, ShowerHead, Wifi } from 'lucide-react'
-
-const Header = () => {
-  return (
-    <div>
-      <HeaderButtons />
-      <Image src="/field-1.jpg" alt="Field" width={1000} height={1000} />
-    </div>
-  )
-}
-
-const FieldBasicInfo = ({ name, address, fieldType }: { name: string; address: string; fieldType: FieldType }) => {
-  return (
-    <>
-      <div className="flex items-center justify-center gap-4">
-        <div className="flex flex-col items-center gap-2">
-          <h1 className="text-xl font-bold text-center">{name}</h1>
-          <span className="text-sm text-gray-500">{address}</span>
-        </div>
-      </div>
-      <div className="flex items-center justify-center gap-4">
-        <div className="flex items-center gap-2">
-          <Star strokeWidth={2} />
-          <span className="text-sm font-medium">4.5</span>
-        </div>
-        <Separator orientation="vertical" decorative className="bg-gray-400" style={{ height: '20px', width: '1px' }} />
-        <div className="flex items-center gap-2">
-          <Users strokeWidth={2} />
-          <span className="text-sm font-medium">{fieldTypeDisplay[fieldType]}</span>
-        </div>
-      </div>
-      <Separator orientation="horizontal" className="bg-gray-200" />
-    </>
-  )
-}
-
-const FieldDescription = ({ description }: { description: string }) => {
-  return (
-    <>
-      <div>
-        <h2 className="text-lg font-bold mb-2">Sobre la cancha</h2>
-        <p className="text-sm text-gray-500">{description}</p>
-      </div>
-    </>
-  )
-}
-
-const FieldAmenities = () => {
-  // TODO: Add amenities map
-  const amenitiesexample = [
-    {
-      icon: CarFront,
-      name: 'Estacionamiento',
-    },
-    {
-      icon: ShowerHead,
-      name: 'Baños',
-    },
-    {
-      icon: Wifi,
-      name: 'Wifi',
-    },
-  ]
-  return (
-    <>
-      <div>
-        <h2 className="text-lg font-bold mb-2">Amenidades de la cancha</h2>
-        <div className="grid grid-cols-2 gap-2">
-          {amenitiesexample.map((amenity) => {
-            return (
-              <div key={amenity.name} className="flex items-center gap-2 rounded-xl border border-gray-400 p-2 w-full">
-                <amenity.icon strokeWidth={2} />
-                <span className="text-sm font-medium">{amenity.name}</span>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    </>
-  )
-}
 
 const FieldAvailability = () => {
   return (
@@ -124,9 +36,9 @@ const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
       <main className="flex flex-col gap-4">
         <Header />
         <div className="flex flex-col gap-4 w-full -top-16 relative bg-white rounded-4xl p-4">
-          <FieldBasicInfo name={name} address={address} fieldType={fieldType as FieldType} />
-          <FieldDescription description={description} />
-          <FieldAmenities />
+          <MainInfo name={name} address={address} fieldType={fieldType as FieldType} />
+          <Description description={description} />
+          <Amenities />
           <FieldAvailability />
           <Booking pricePerHour={pricePerHour} />
           {/* <FieldMap /> */}
