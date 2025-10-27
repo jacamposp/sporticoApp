@@ -80,6 +80,7 @@ model Field {
   fieldType    FieldType
   photos       FieldPhoto[]
   availability Availability[]
+  workSchedule WorkSchedule?
   bookings     Booking[]
   reviews      Review[]
   createdAt    DateTime       @default(now())
@@ -102,6 +103,50 @@ model Availability {
   startTime DateTime
   endTime   DateTime
   isBooked  Boolean  @default(false)
+}
+
+model WorkSchedule {
+  id        Int     @id @default(autoincrement())
+  field     Field   @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId   Int     @unique
+  
+  // Monday
+  mondayEnabled    Boolean @default(false)
+  mondayStart      String? // Format: "HH:mm" e.g. "08:00"
+  mondayEnd        String? // Format: "HH:mm" e.g. "22:00"
+  
+  // Tuesday
+  tuesdayEnabled   Boolean @default(false)
+  tuesdayStart     String?
+  tuesdayEnd       String?
+  
+  // Wednesday
+  wednesdayEnabled Boolean @default(false)
+  wednesdayStart   String?
+  wednesdayEnd     String?
+  
+  // Thursday
+  thursdayEnabled  Boolean @default(false)
+  thursdayStart    String?
+  thursdayEnd      String?
+  
+  // Friday
+  fridayEnabled    Boolean @default(false)
+  fridayStart      String?
+  fridayEnd        String?
+  
+  // Saturday
+  saturdayEnabled  Boolean @default(false)
+  saturdayStart    String?
+  saturdayEnd      String?
+  
+  // Sunday
+  sundayEnabled    Boolean @default(false)
+  sundayStart      String?
+  sundayEnd        String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Booking {

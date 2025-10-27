@@ -7,12 +7,12 @@ import Calendar from '@/components/Calendar'
 import { prisma } from '@/lib/prisma'
 import { FieldType, fieldTypeDisplay } from '@/lib/types'
 
-const FieldAvailability = () => {
+const FieldAvailability = ({ fieldId }: { fieldId: number }) => {
   return (
     <>
       <div>
         <h2 className="text-lg font-bold mb-2">Disponibilidad de la cancha</h2>
-        <Calendar />
+        <Calendar fieldId={fieldId} />
       </div>
     </>
   )
@@ -39,7 +39,7 @@ const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
           <MainInfo name={name} address={address} fieldType={fieldType as FieldType} />
           <Description description={description} />
           <Amenities />
-          <FieldAvailability />
+          <FieldAvailability fieldId={field.id} />
           <Booking pricePerHour={pricePerHour} />
           {/* <FieldMap /> */}
           {/* <FieldReviews /> */}

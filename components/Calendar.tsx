@@ -1,14 +1,14 @@
 import WeeklyCalendar from './WeeklyCalendar'
 import TimeAvailability from './TimeAvailability'
 
-const Calendar = () => {
+const Calendar = ({ fieldId }: { fieldId: number }) => {
   return (
     <div className="p-4">
       {/* Calendario */}
       <WeeklyCalendar />
 
       {/* Disponibilidad de horas */}
-      <TimeAvailability />
+      <TimeAvailability fieldId={fieldId} />
     </div>
   )
 }

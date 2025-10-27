@@ -4,13 +4,15 @@ import { useRouter, usePathname } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Search, User, Heart } from 'lucide-react'
+import { Search, User, Bookmark, House } from 'lucide-react'
+import { se } from 'date-fns/locale'
 
 const BottomNavBar = () => {
   const { data: session } = useSession()
   const router = useRouter()
   const pathname = usePathname()
   const isLoggedIn = !!session
+  console.log(session)
 
   if (pathname.includes('/fields/')) {
     return
@@ -32,7 +34,7 @@ const BottomNavBar = () => {
           value="search"
           className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-none"
         >
-          <Heart className="size-5" strokeWidth={2} /> Favoritos
+          <Bookmark className="size-5" strokeWidth={2} /> Mis reservas
         </TabsTrigger>
         <TabsTrigger
           value="profile"

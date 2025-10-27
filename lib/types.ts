@@ -13,3 +13,21 @@ export const fieldTypeDisplay: Record<FieldType, string> = {
   SEVEN_VS_SEVEN: '7vs7',
   ELEVEN_VS_ELEVEN: '11vs11',
 }
+
+export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+
+export type DaySchedule = {
+  enabled: boolean
+  start: string | null // Format: "HH:mm" e.g. "08:00"
+  end: string | null // Format: "HH:mm" e.g. "22:00"
+}
+
+export type WorkScheduleData = {
+  monday: DaySchedule
+  tuesday: DaySchedule
+  wednesday: DaySchedule
+  thursday: DaySchedule
+  friday: DaySchedule
+  saturday: DaySchedule
+  sunday: DaySchedule
+}
