@@ -3,16 +3,14 @@ import { useSession } from 'next-auth/react'
 import { useRouter, usePathname } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Search, User, Bookmark, House } from 'lucide-react'
-import { se } from 'date-fns/locale'
+import { Search, User, Bookmark, UserCog } from 'lucide-react'
 
 const BottomNavBar = () => {
   const { data: session } = useSession()
   const router = useRouter()
   const pathname = usePathname()
   const isLoggedIn = !!session
-  console.log(session)
+  const isHost = session?.user?.isHost
 
   if (pathname.includes('/fields/')) {
     return
@@ -23,7 +21,7 @@ const BottomNavBar = () => {
       <TabsList className="bg-white w-full h-16">
         <TabsTrigger
           value="home"
-          className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-none"
+          className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:shadow-none"
           onClick={() => {
             router.push('/')
           }}
@@ -32,13 +30,24 @@ const BottomNavBar = () => {
         </TabsTrigger>
         <TabsTrigger
           value="search"
-          className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-none"
+          className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:shadow-none"
         >
           <Bookmark className="size-5" strokeWidth={2} /> Mis reservas
         </TabsTrigger>
+        {isHost && (
+          <TabsTrigger
+            value="fields"
+            className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:shadow-none"
+            onClick={() => {
+              router.push('/my-fields')
+            }}
+          >
+            <UserCog className="size-5" strokeWidth={2} /> Mis canchas
+          </TabsTrigger>
+        )}
         <TabsTrigger
           value="profile"
-          className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-none"
+          className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:shadow-none"
           onClick={() => {
             isLoggedIn ? router.push('/profile') : router.push('/login')
           }}

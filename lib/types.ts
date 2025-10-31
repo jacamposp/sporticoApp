@@ -1,3 +1,20 @@
+import { Role } from '@prisma/client'
+import { DefaultSession } from 'next-auth'
+
+declare module 'next-auth' {
+  interface Session {
+    user: DefaultSession['user'] & {
+      id: string
+      role: Role
+      phone: string | null
+      isHost: boolean
+      hasFields?: boolean
+      emailVerified?: Date
+      createdAt?: Date
+    }
+  }
+}
+
 export type Filters = {
   location: string
   date: string
