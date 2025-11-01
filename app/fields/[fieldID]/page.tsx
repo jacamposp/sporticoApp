@@ -2,7 +2,6 @@
 
 //Third party / external libraries
 import { Booking, Header, Description, Amenities, MainInfo } from './_components'
-
 import Calendar from '@/components/Calendar'
 import { prisma } from '@/lib/prisma'
 import { FieldType, fieldTypeDisplay } from '@/lib/types'
@@ -40,7 +39,7 @@ const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
           <Description description={description} />
           <Amenities />
           <FieldAvailability fieldId={field.id} />
-          <Booking pricePerHour={pricePerHour} />
+          <Booking pricePerHour={pricePerHour} fieldName={name} />
           {/* <FieldMap /> */}
           {/* <FieldReviews /> */}
         </div>
