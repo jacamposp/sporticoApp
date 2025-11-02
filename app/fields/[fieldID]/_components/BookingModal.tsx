@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useBookingStore } from '@/lib/store/bookingStore'
 import { formatCurrency } from '@/lib/utils'
 import {
@@ -18,14 +18,18 @@ type BookingModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   fieldName?: string
+  fieldId: number
 }
 
-export const BookingModal = ({ open, onOpenChange, fieldName }: BookingModalProps) => {
+export const BookingModal = ({ open, onOpenChange, fieldName, fieldId }: BookingModalProps) => {
   const selectedDate = useBookingStore((s) => s.selectedDate)
   const selectedTimeRange = useBookingStore((s) => s.selectedTimeRange)
   const quantityOfHours = useBookingStore((s) => s.quantityOfHours)
   const pricePerHour = useBookingStore((s) => s.pricePerHour)
   const totalPrice = useBookingStore((s) => s.getTotalPrice())
+  const resetBooking = useBookingStore((s) => s.resetBooking)
+
+  const [submitting, setSubmitting] = useState(false)
 
   const formattedDate = useMemo(() => {
     if (!selectedDate) return '-'
@@ -41,6 +45,44 @@ export const BookingModal = ({ open, onOpenChange, fieldName }: BookingModalProp
   const durationLabel = quantityOfHours === 1 ? '1 hora' : `${quantityOfHours} horas`
 
   const canConfirm = Boolean(selectedDate && selectedTimeRange && quantityOfHours > 0)
+
+  const formatDateYmd = (date: Date) => {
+    const y = date.getFullYear()
+    const m = (date.getMonth() + 1).toString().padStart(2, '0')
+    const d = date.getDate().toString().padStart(2, '0')
+    return `${y}-${m}-${d}`
+  }
+
+  const handleConfirm = async () => {
+    if (!selectedDate || !selectedTimeRange) return
+    try {
+      setSubmitting(true)
+      const res = await fetch(`/api/fields/${fieldId}/bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date: formatDateYmd(selectedDate),
+          start: selectedTimeRange.start,
+          end: selectedTimeRange.end,
+        }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert(err?.error || 'No se pudo crear la reserva')
+        return
+      }
+
+      const data = await res.json()
+      alert(`Reserva creada (${data.status}). #${data.bookingId}`)
+      resetBooking()
+      onOpenChange(false)
+    } catch (e) {
+      alert('Error al crear la reserva')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -90,8 +132,8 @@ export const BookingModal = ({ open, onOpenChange, fieldName }: BookingModalProp
           <DialogClose asChild>
             <Button variant="outline">Editar</Button>
           </DialogClose>
-          <Button className="bg-primary text-white" disabled={!canConfirm} onClick={() => onOpenChange(false)}>
-            Confirmar reserva
+          <Button className="bg-primary text-white" disabled={!canConfirm || submitting} onClick={handleConfirm}>
+            {submitting ? 'Creando…' : 'Confirmar reserva'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -34,12 +34,12 @@ const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
     <>
       <main className="flex flex-col gap-4">
         <Header />
-        <div className="flex flex-col gap-4 w-full -top-16 relative bg-white rounded-4xl p-4">
+        <div className="flex flex-col gap-4 w-full -top-16 relative bg-white rounded-4xl p-4 scroll-mt-24">
           <MainInfo name={name} address={address} fieldType={fieldType as FieldType} />
           <Description description={description} />
           <Amenities />
           <FieldAvailability fieldId={field.id} />
-          <Booking pricePerHour={pricePerHour} fieldName={name} />
+          <Booking pricePerHour={pricePerHour} fieldName={name} fieldId={field.id} />
           {/* <FieldMap /> */}
           {/* <FieldReviews /> */}
         </div>
