@@ -31,6 +31,9 @@ const BottomNavBar = () => {
         <TabsTrigger
           value="search"
           className="flex flex-col items-center justify-center data-[state=active]:bg-white data-[state=active]:shadow-none"
+          onClick={() => {
+            router.push('/bookings')
+          }}
         >
           <Bookmark className="size-5" strokeWidth={2} /> Mis reservas
         </TabsTrigger>

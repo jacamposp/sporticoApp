@@ -52,8 +52,8 @@ export default async function MyFieldsPage() {
 
       <Tabs defaultValue="Estadísticas" className="w-full items-center">
         <TabsList className="w-full bg-white">
-          <TabsTrigger value="Estadísticas" className=''>Estadísticas</TabsTrigger>
-          <TabsTrigger value="Canchas" className=''>Canchas</TabsTrigger>
+          <TabsTrigger value="Estadísticas">Estadísticas</TabsTrigger>
+          <TabsTrigger value="Canchas">Canchas</TabsTrigger>
         </TabsList>
         <TabsContent value="Estadísticas"></TabsContent>
         <TabsContent value="Canchas">
