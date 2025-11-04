@@ -12,7 +12,11 @@ import {
 } from '@/components/ui/carousel'
 import Image from 'next/image'
 
-export const Header = () => {
+type HeaderProps = {
+  photos?: Array<{ url: string }>
+}
+
+export const Header = ({ photos }: HeaderProps) => {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
   const [count, setCount] = React.useState(0)
@@ -30,21 +34,31 @@ export const Header = () => {
     })
   }, [api])
 
+  const imageUrls = (photos && photos.length > 0 ? photos : []).map((p) => p.url)
+  //TODO: Add fallback images
+  const fallback = ['/field-1.jpg', '/campnou.webp', '/field-1.jpg']
+  const slides = imageUrls.length > 0 ? imageUrls : fallback
+
   return (
     <>
       <div className="relative">
         <HeaderButtons />
         <Carousel setApi={setApi}>
           <CarouselContent>
-            <CarouselItem>
-              <Image src="/field-1.jpg" alt="Field" width={1000} height={1000} />
-            </CarouselItem>
-            <CarouselItem>
-              <Image src="/campnou.webp" alt="Field" width={1000} height={1000} />
-            </CarouselItem>
-            <CarouselItem>
-              <Image src="/field-1.jpg" alt="Field" width={1000} height={1000} />
-            </CarouselItem>
+            {slides.map((src, idx) => (
+              <CarouselItem key={`${src}-${idx}`} className="flex justify-center">
+                <div className="relative w-full max-w-[1000px] h-[300px] sm:h-[360px] md:h-[420px] overflow-hidden">
+                  <Image
+                    src={src}
+                    alt="Field"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1000px"
+                    priority={idx === 0}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
           </CarouselContent>
           {/* <CarouselPrevious />
           <CarouselNext /> */}

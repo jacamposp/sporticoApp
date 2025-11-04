@@ -69,7 +69,7 @@ export default async function Home({
               key={cancha.id}
               id={cancha.id}
               name={cancha.name}
-              image={'/field-1.jpg'}
+              image={cancha.photos[0]?.url}
               location={cancha.address}
               rating={4}
               reviewCount={10}

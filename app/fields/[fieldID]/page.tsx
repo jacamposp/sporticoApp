@@ -22,18 +22,23 @@ const FieldsPage = async ({ params }: { params: { fieldID: string } }) => {
     where: {
       id: parseInt(params.fieldID),
     },
+    include: {
+      photos: {
+        orderBy: { isCover: 'desc' },
+      },
+    },
   })
 
   if (!field) {
     return <div>Cancha no encontrada</div>
   }
 
-  const { name, description, address, pricePerHour, fieldType } = field
+  const { name, description, address, pricePerHour, fieldType, photos } = field
 
   return (
     <>
       <main className="flex flex-col gap-4">
-        <Header />
+        <Header photos={photos} />
         <div className="flex flex-col gap-4 w-full -top-16 relative bg-white rounded-4xl p-4 scroll-mt-24">
           <MainInfo name={name} address={address} fieldType={fieldType as FieldType} />
           <Description description={description} />

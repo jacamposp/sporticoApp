@@ -30,6 +30,7 @@ export default function FieldManagementPage({ params }: { params: Promise<{ fiel
   const [pricePerHour, setPricePerHour] = useState<number | ''>('')
   const [photos, setPhotos] = useState<Photo[]>([])
   const [autoConfirmBookings, setAutoConfirmBookings] = useState<boolean>(true)
+  const [uploading, setUploading] = useState(false)
 
   // Amenidades (solo UI por ahora)
   const [amenities, setAmenities] = useState({
@@ -171,10 +172,32 @@ export default function FieldManagementPage({ params }: { params: Promise<{ fiel
     return days
   }, [])
 
-  const addPhoto = () => {
-    const url = typeof window !== 'undefined' ? window.prompt('Pega la URL de la foto') : ''
-    if (url && url.trim()) {
-      setPhotos((prev) => [...prev, { url: url.trim() }])
+  // URL-based photo addition removed; only local uploads are supported
+
+  const onFilesSelected = async (files: FileList | null) => {
+    if (!files || files.length === 0) return
+    try {
+      setUploading(true)
+      const uploads = Array.from(files).map(async (file) => {
+        const fd = new FormData()
+        fd.append('file', file)
+        const res = await fetch('/api/uploads', { method: 'POST', body: fd })
+        if (!res.ok) throw new Error('Upload failed')
+        const data = await res.json()
+        const url = Array.isArray(data.urls) ? data.urls[0] : undefined
+        if (url) {
+          setPhotos((prev) => {
+            const hasCover = prev.some((p) => p.isCover)
+            return [...prev, { url, isCover: hasCover ? false : prev.length === 0 }]
+          })
+        }
+      })
+      await Promise.all(uploads)
+    } catch (e) {
+      console.error(e)
+      alert('No se pudo subir la imagen. Intenta nuevamente.')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -327,6 +350,11 @@ export default function FieldManagementPage({ params }: { params: Promise<{ fiel
             <div key={`${p.url}-${idx}`} className="relative h-28 w-40 shrink-0 rounded-md overflow-hidden border">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={p.url} alt="Foto" className="h-full w-full object-cover" />
+              {p.isCover ? (
+                <span className="absolute left-2 top-2 inline-flex items-center rounded bg-green-600/90 px-2 py-0.5 text-[10px] font-medium text-white">
+                  Cover
+                </span>
+              ) : null}
               <button
                 onClick={() => removePhoto(idx)}
                 className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full h-6 w-6 text-xs"
@@ -337,12 +365,20 @@ export default function FieldManagementPage({ params }: { params: Promise<{ fiel
             </div>
           ))}
 
-          <button
-            onClick={addPhoto}
-            className="h-28 w-40 shrink-0 rounded-md border border-dashed flex items-center justify-center text-sm text-gray-600 hover:bg-gray-50"
+          <label
+            htmlFor="photo-upload-input"
+            className="h-28 w-40 shrink-0 rounded-md border border-dashed flex flex-col items-center justify-center text-sm text-gray-600 hover:bg-gray-50 cursor-pointer"
           >
-            Agregar foto
-          </button>
+            {uploading ? 'Subiendo…' : 'Subir fotos'}
+            <input
+              id="photo-upload-input"
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => onFilesSelected(e.target.files)}
+            />
+          </label>
         </div>
       </div>
 

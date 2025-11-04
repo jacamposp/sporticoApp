@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { fieldTypeDisplay, FieldType } from '@/lib/types'
@@ -23,6 +24,29 @@ export default async function MyFieldsPage() {
       fields: {
         orderBy: {
           createdAt: 'desc',
+        },
+        include: {
+          photos: {
+            orderBy: { isCover: 'desc' },
+          },
+          workSchedule: true,
+          bookings: {
+            where: {
+              // count only today's bookings for the summary indicator
+              startTime: {
+                gte: (() => {
+                  const d = new Date()
+                  d.setHours(0, 0, 0, 0)
+                  return d
+                })(),
+                lt: (() => {
+                  const d = new Date()
+                  d.setHours(23, 59, 59, 999)
+                  return d
+                })(),
+              },
+            },
+          },
         },
       },
     },
@@ -57,37 +81,64 @@ export default async function MyFieldsPage() {
         </TabsList>
         <TabsContent value="Estadísticas"></TabsContent>
         <TabsContent value="Canchas">
-          <div className="grid gap-4">
-            {user.fields.map((field) => (
-              <div
-                key={field.id}
-                className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h3 className="font-bold text-lg mb-1">{field.name}</h3>
-                    <p className="text-sm text-gray-600 mb-2">📍 {field.address}</p>
-                    <div className="flex gap-4 text-sm">
-                      <span className="text-gray-500">
-                        Tipo:{' '}
-                        <span className="font-medium text-gray-700">
-                          {fieldTypeDisplay[field.fieldType as FieldType]}
-                        </span>
-                      </span>
-                      <span className="text-gray-500">
-                        Precio: <span className="font-medium text-green-600">${field.pricePerHour}/hora</span>
-                      </span>
-                    </div>
+          <div className="grid gap-5">
+            {user.fields.map((field) => {
+              const coverPhotoUrl =
+                field.photos?.find((p) => p.isCover)?.url || field.photos?.[0]?.url || '/field-1.jpg'
+              const isPublished = Boolean(field.workSchedule)
+              const todaysBookings = field.bookings?.length ?? 0
+
+              return (
+                <div key={field.id} className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 overflow-hidden">
+                  <div className="relative w-full h-48">
+                    <Image
+                      src={coverPhotoUrl}
+                      alt={field.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, 640px"
+                      priority={false}
+                    />
                   </div>
 
-                  <Link href={`/my-fields/${field.id}`}>
-                    <Button variant="outline" className="ml-4">
-                      ⚙️ Gestionar Horario
-                    </Button>
-                  </Link>
+                  <div className="p-5">
+                    <p className="text-sm text-gray-500 mb-1">{fieldTypeDisplay[field.fieldType as FieldType]}</p>
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 leading-snug">{field.name}</h3>
+                        <div className="mt-2 flex items-center gap-3 text-sm">
+                          <span className={isPublished ? 'text-green-600 font-medium' : 'text-amber-600 font-medium'}>
+                            {isPublished ? 'Published' : 'Draft'}
+                          </span>
+                          <span className="text-gray-400">•</span>
+                          <span className="text-gray-600">
+                            {todaysBookings > 0
+                              ? `${todaysBookings} booking${todaysBookings === 1 ? '' : 's'} today`
+                              : 'No upcoming bookings'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <Link href={`/my-fields/${field.id}`}>
+                        <Button className="px-5">Edit</Button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
+              )
+            })}
+
+            {/* Add new court - empty state style card */}
+            <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-6 flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                <span className="text-2xl">⚽</span>
               </div>
-            ))}
+              <p className="text-gray-900 font-semibold mb-1">No courts yet</p>
+              <p className="text-gray-500 text-sm mb-4">Add your first court to get started!</p>
+              <Button disabled className="px-4">
+                Add your first court
+              </Button>
+            </div>
           </div>
         </TabsContent>
       </Tabs>
