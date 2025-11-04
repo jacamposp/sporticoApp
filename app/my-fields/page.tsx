@@ -80,7 +80,7 @@ export default async function MyFieldsPage() {
                     </div>
                   </div>
 
-                  <Link href={`/profile/my-fields/${field.id}`}>
+                  <Link href={`/my-fields/${field.id}`}>
                     <Button variant="outline" className="ml-4">
                       ⚙️ Gestionar Horario
                     </Button>
