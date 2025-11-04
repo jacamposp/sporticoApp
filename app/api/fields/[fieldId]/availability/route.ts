@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: NextRequest, { params }: { params: { fieldId: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ fieldId: string }> }
+) {
   try {
-    const fieldId = parseInt(params.fieldId)
+    const { fieldId: fieldIdStr } = await context.params
+    const fieldId = parseInt(fieldIdStr)
     if (Number.isNaN(fieldId)) {
       return NextResponse.json({ error: 'Invalid fieldId' }, { status: 400 })
     }

@@ -5,9 +5,13 @@ import { prisma } from '@/lib/prisma'
 
 // GET /api/fields/[fieldId]/work-schedule
 // Fetch work schedule for a field
-export async function GET(request: NextRequest, { params }: { params: { fieldId: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ fieldId: string }> }
+) {
   try {
-    const fieldId = parseInt(params.fieldId)
+    const { fieldId: fieldIdStr } = await context.params
+    const fieldId = parseInt(fieldIdStr)
 
     const workSchedule = await prisma.workSchedule.findUnique({
       where: { fieldId },
@@ -22,7 +26,10 @@ export async function GET(request: NextRequest, { params }: { params: { fieldId:
 
 // PUT /api/fields/[fieldId]/work-schedule
 // Create or update work schedule for a field
-export async function PUT(request: NextRequest, { params }: { params: { fieldId: string } }) {
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ fieldId: string }> }
+) {
   try {
     // 1. Check if user is authenticated
     const session = await getServerSession(authOptions)
@@ -30,7 +37,8 @@ export async function PUT(request: NextRequest, { params }: { params: { fieldId:
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const fieldId = parseInt(params.fieldId)
+    const { fieldId: fieldIdStr } = await context.params
+    const fieldId = parseInt(fieldIdStr)
 
     // 2. Verify field ownership (security!)
     const field = await prisma.field.findUnique({

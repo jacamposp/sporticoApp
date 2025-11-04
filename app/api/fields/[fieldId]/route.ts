@@ -5,9 +5,13 @@ import { prisma } from '@/lib/prisma'
 
 // GET /api/fields/[fieldId]
 // Returns field basic information including photos
-export async function GET(request: NextRequest, { params }: { params: { fieldId: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ fieldId: string }> }
+) {
   try {
-    const fieldId = parseInt(params.fieldId)
+    const { fieldId: fieldIdStr } = await context.params
+    const fieldId = parseInt(fieldIdStr)
 
     const field = await prisma.field.findUnique({
       where: { id: fieldId },
@@ -27,14 +31,18 @@ export async function GET(request: NextRequest, { params }: { params: { fieldId:
 
 // PUT /api/fields/[fieldId]
 // Updates field basic information and replaces photos list
-export async function PUT(request: NextRequest, { params }: { params: { fieldId: string } }) {
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ fieldId: string }> }
+) {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const fieldId = parseInt(params.fieldId)
+    const { fieldId: fieldIdStr } = await context.params
+    const fieldId = parseInt(fieldIdStr)
 
     // Verify ownership
     const existing = await prisma.field.findUnique({

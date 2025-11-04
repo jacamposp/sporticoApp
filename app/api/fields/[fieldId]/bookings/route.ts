@@ -11,14 +11,18 @@ type PostBody = {
   idempotencyKey?: string
 }
 
-export async function POST(request: NextRequest, { params }: { params: { fieldId: string } }) {
+export async function POST(
+  request: NextRequest,
+  context: { params: Promise<{ fieldId: string }> }
+) {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const fieldId = Number(params.fieldId)
+    const { fieldId: fieldIdStr } = await context.params
+    const fieldId = Number(fieldIdStr)
     if (Number.isNaN(fieldId)) {
       return NextResponse.json({ error: 'Invalid fieldId' }, { status: 400 })
     }
