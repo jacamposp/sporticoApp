@@ -46,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: { params: { fieldId:
     }
 
     const body = await request.json()
-    const { name, description, address, city, country, pricePerHour, fieldType, photos, autoConfirmBookings } = body
+    const { name, description, address, city, country, pricePerHour, fieldType, photos } = body
 
     // Normalize photos (array of { url, isCover? })
     const normalizedPhotos: Array<{ url: string; isCover?: boolean }> = Array.isArray(photos)
@@ -67,8 +67,6 @@ export async function PUT(request: NextRequest, { params }: { params: { fieldId:
           country,
           pricePerHour,
           fieldType,
-          autoConfirmBookings:
-            typeof autoConfirmBookings === 'boolean' ? autoConfirmBookings : existing.autoConfirmBookings,
           photos: {
             deleteMany: {},
           },
