@@ -1,2 +1,7 @@
 export * from './HeaderButtons'
+export * from './MainInfo'
 export * from './Booking'
+export * from './Header'
+export * from './Description'
+export * from './Amenities'
+export * from './BookingModal'
